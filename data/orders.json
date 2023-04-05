@@ -1,0 +1,16 @@
+[
+    {
+        "basePrice": 15000,
+        "quantity": 1,
+        "address": "28 International Junction",
+        "ProfileId": 1,
+        "CoffeeId": 1
+    },
+    {
+        "basePrice": 20000,
+        "quantity": 3,
+        "address": "33 Burning Wood Road",
+        "ProfileId": 2,
+        "CoffeeId": 2
+    }
+]
