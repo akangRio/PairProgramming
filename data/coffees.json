@@ -2,35 +2,35 @@
     {
         "name": "Espresso",
         "image": "Image",
-        "isMade": true,
+        "coffeeCup": true,
         "price": 15000,
         "category": "Espresso"
     },
     {
         "name": "Americano",
         "image": "Image",
-        "isMade": true,
+        "coffeeCup": true,
         "price": 15000,
         "category": "Espresso"
     },
     {
         "name": "Cappuccino",
         "image": "Image",
-        "isMade": true,
+        "coffeeCup": true,
         "price": 20000,
         "category": "Espresso"
     },
     {
         "name": "Double Espresso",
         "image": "Image",
-        "isMade": true,
+        "coffeeCup": true,
         "price": 20000,
         "category": "Espresso"
     },
     {
         "name": "Americano Double Shot",
         "image": "Image",
-        "isMade": true,
+        "coffeeCup": true,
         "price": 25000,
         "category": "Espresso"
     }
