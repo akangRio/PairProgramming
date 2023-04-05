@@ -8,12 +8,22 @@ class Controller {
   }
 
   static loginForm(req, res) {
-    res.render('login')
+    const errors = req.query.errors
+    res.render('login', { errors })
   }
 
   static login(req, res) {
     const { email, password } = req.body
     let id;
+    let role;
+
+    let errors = []
+
+    if (!email) errors.push('Email is required!')
+    if (!password) errors.push('Password is required!')
+    if (errors.length > 0) {
+      return res.redirect(`/login?errors=${errors}`);
+    }
 
     User.findOne({
       where: {
@@ -21,28 +31,52 @@ class Controller {
       }
     })
       .then(data => {
-        id = data.id
-        if (!data) res.send('gaada akun')
+        if (!data) {
+          errors.push('Email not found!')
+          throw new Error('emailNotFound')
+        }
         else {
+          id = data.id
+          role = data.isAdmin
           return bcryptjs.compare(password, data.password)
         }
       })
       .then(isValid => {
         if (isValid) {
-          req.session.userId = id;
-          res.redirect('/store')
+          req.session.userId = id
+          req.session.role = role
+
+          if (req.session.role) {
+            res.redirect('/store/admin')
+          } else {
+            res.redirect('/store')
+          }
         } else {
-          res.send('GAADAAAA')
+          errors.push('Invalid password!')
+          throw new Error('invalidPassword')
         }
       })
       .catch(err => {
         console.log(err)
-        res.send(err)
+        if (err.message === 'emailNotFound' || err.message === 'invalidPassword') {
+          res.redirect(`/login?errors=${errors}`)
+        } else {
+          res.send(err)
+        }
       })
   }
 
   static register(req, res) {
     res.render('register')
+  }
+
+  static readStoreAdmin(req, res) {
+    Coffee.findAll()
+      .then(data => res.render('storeAdmin', { data }))
+      .catch(err => {
+        console.log(err)
+        res.send(err)
+      })
   }
 
   static readStore(req, res) {
