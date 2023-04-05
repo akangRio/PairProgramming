@@ -1,4 +1,5 @@
 'use strict';
+const bcryptjs = require('bcryptjs')
 const {
   Model
 } = require('sequelize');
@@ -15,20 +16,64 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   User.init({
-    username: DataTypes.STRING,
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    isAdmin: DataTypes.BOOLEAN
+    username: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Username is required!'
+        },
+        notEmpty: {
+          msg: 'Username is required!'
+        }
+      }
+    },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Email is required!'
+        },
+        notEmpty: {
+          msg: 'Email is required!'
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Password is required!'
+        },
+        notEmpty: {
+          msg: 'Password is required!'
+        }
+      }
+    },
+    isAdmin: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true
+      }
+    }
   }, {
     sequelize,
     modelName: 'User',
   });
 
   User.beforeValidate(instance => {
-    const salt = bcryptjs.genSaltSync(10)
-    const hash = bcryptjs.hashSync(instance.password, salt)
-
-    instance.password = hash
+    if (instance.password) {
+      const salt = bcryptjs.genSaltSync(10)
+      const hash = bcryptjs.hashSync(instance.password, salt)
+  
+      instance.password = hash
+    }
+    
+    instance.isAdmin = false
   })
   return User;
 };

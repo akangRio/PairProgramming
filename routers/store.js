@@ -7,7 +7,7 @@ const authentication = (req, res, next) => {
 	if (req.session.userId) {
 		next()
 	} else {
-		res.send('Please log in to continue')
+		res.render('failAuth')
 	}
 }
 

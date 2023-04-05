@@ -9,7 +9,8 @@ class Controller {
 
   static loginForm(req, res) {
     const errors = req.query.errors
-    res.render('login', { errors })
+    const registered = req.query.success
+    res.render('login', { errors, registered })
   }
 
   static login(req, res) {
@@ -66,8 +67,34 @@ class Controller {
       })
   }
 
+  static registerForm(req, res) {
+    const errors = req.query.errors
+    res.render('register', { errors })
+  }
+
   static register(req, res) {
-    res.render('register')
+    const { username, email, password, passwordConfirm } = req.body
+    let errors = []
+    if (password !== passwordConfirm) {
+      errors.push(`Password doesn't match`)
+      return res.redirect(`/register?errors=${errors}`)
+    }
+
+    User.create({
+      username,
+      email,
+      password
+    })
+      .then(() => res.redirect('/login?success=Register+success!'))
+      .catch(err => {
+        if (err.name === 'SequelizeValidationError') {
+          err.errors.forEach(el => errors.push(el.message))
+          res.redirect(`/register?errors=${errors}`)
+        } else {
+          console.log(err)
+          res.send(err)
+        }
+      })
   }
 
   static readStoreAdmin(req, res) {

@@ -7,6 +7,7 @@ router.get('/', Controller.readHome)
 router.get('/login', Controller.loginForm)
 router.post('/login', Controller.login)
 
-router.get('/register', Controller.register)
+router.get('/register', Controller.registerForm)
+router.post('/register', Controller.register)
 
 module.exports = router
