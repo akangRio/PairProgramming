@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const homeRouter = require('./home')
+const homeRouter = require('./homeLogin')
 const storeRouter = require('./store')
 
 router.use('/store', storeRouter)
