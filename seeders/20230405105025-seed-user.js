@@ -10,7 +10,7 @@ module.exports = {
       user.updatedAt = new Date()
 
       const salt=bcryptjs.genSaltSync(10)
-      const hash=bcryptjs.hashSync("password", salt)
+      const hash=bcryptjs.hashSync(user.password, salt)
 
       user.password = hash
       return user
