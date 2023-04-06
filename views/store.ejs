@@ -43,11 +43,43 @@
               <td>
                 <%= el.category %>
               </td>
-              <td><button>Add to Cart</button></td>
+              <td><button><a href="/store/<%= profile.id %>/addtocart/<%= el.id %>">Add to Cart</a></button></td>
             </tr>
             <% }) %>
         </tbody>
       </table>
+     <% if(profile.Orders){%> 
+      <h2>Shopping Cart</h2> 
+     <% } %>
+     
+     
+     
+      <table class="table">
+        <tr>
+        <th>No</th>
+        <th>Cart Items</th>
+        <th>Price</th>
+        <th>Amount</th>
+        <th>Total Price</th>
+      </tr>
+
+        <% profile.Orders.forEach((order, i) => { %>
+
+          <tr>
+            <td><%= i +1 %></td>
+            <td><%= order.Coffee.name %></td>
+            <td><%= order.basePrice %></td>
+            <td>
+              <a href="/store/<%= profile.id %>/increase/<%= order.CoffeeId %>">+</a>
+              <%= order.quantity %>
+              <a href="/store/<%= profile.id %>/decrease/<%= order.CoffeeId %>">-</a>
+            </td>
+            <td><%= order.totalPrice %></td>
+          </tr>
+
+          <%  }) %>
+      </table>
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"

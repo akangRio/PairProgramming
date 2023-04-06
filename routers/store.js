@@ -21,10 +21,12 @@ const isNotAdmin = (req, res, next) => {
 	if (!req.session.role) next()
 }
 
-router.get('/admin', authentication, isAdmin, Controller.readStoreAdmin)
 router.get('/', authentication, isNotAdmin, Controller.readStore)
-
-
+router.get('/admin', authentication, isAdmin, Controller.readStoreAdmin)
 router.get('/logout', Controller.logout)
+router.get('/:profid', Controller.readStore)
+router.get('/:profid/addtocart/:id', Controller.addToCart)
+router.get('/:profid/decrease/:id', Controller.decOrder)
+router.get('/:profid/increase/:id', Controller.incOrder)
 
 module.exports = router
