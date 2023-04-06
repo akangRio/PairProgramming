@@ -21,7 +21,16 @@ module.exports = (sequelize, DataTypes) => {
   }
   Order.init({
     basePrice: DataTypes.INTEGER,
-    quantity: DataTypes.INTEGER,
+    quantity: {
+      type : DataTypes.INTEGER,
+      validate : {
+        customValidator(quantity){
+          if(quantity < 0){
+            throw new Error("quantity cant be below zero");
+          }
+        }
+      }
+    },
     address: DataTypes.STRING,
     ProfileId: DataTypes.INTEGER,
     CoffeeId: {

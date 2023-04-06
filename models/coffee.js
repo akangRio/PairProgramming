@@ -13,6 +13,11 @@ module.exports = (sequelize, DataTypes) => {
       Coffee.hasMany(models.Order, { foreignKey: 'CoffeeId' })
       // define association here
     }
+
+    get priceIDR(){
+      return `Rp. ${Intl.NumberFormat('id-ID').format(this.price)},00`;
+    }
+
   }
   Coffee.init({
     name: DataTypes.STRING,

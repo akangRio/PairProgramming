@@ -24,6 +24,7 @@ const isNotAdmin = (req, res, next) => {
 router.get('/', authentication, isNotAdmin, Controller.readStore)
 router.get('/admin', authentication, isAdmin, Controller.readStoreAdmin)
 router.get('/logout', Controller.logout)
+router.get('/profilelist', Controller.profileList)
 router.get('/:profid', Controller.readStore)
 router.get('/:profid/addtocart/:id', Controller.addToCart)
 router.get('/:profid/decrease/:id', Controller.decOrder)

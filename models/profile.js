@@ -1,6 +1,6 @@
 'use strict';
 const {
-  Model
+  Model , Op
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
@@ -14,6 +14,27 @@ module.exports = (sequelize, DataTypes) => {
       Profile.hasMany(models.Order, { foreignKey: 'ProfileId' })
       // define association here
     }
+
+    static listAll(search){
+      let option = {
+        include : [{
+          model : sequelize.models.Order,
+          include : [{
+            model : sequelize.models.Coffee
+          }]
+        },
+        {
+          model : sequelize.models.User
+        }]
+      }
+      console.log(search);
+      if(search){
+        option.where = {name:{[Op.iLike]:`%${search}%`}}
+      }
+
+      return Profile.findAll(option)
+    }
+
   }
   Profile.init({
     name: DataTypes.STRING,
