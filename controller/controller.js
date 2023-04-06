@@ -74,7 +74,7 @@ class Controller {
   }
 
   static register(req, res) {
-    const { username, email, password, passwordConfirm } = req.body
+    const { username, email, password, passwordConfirm, name, address, phone } = req.body
     let errors = []
     if (password !== passwordConfirm) {
       errors.push(`Password doesn't match`)
@@ -85,6 +85,14 @@ class Controller {
       email,
       password
     })
+      .then((data) => {
+        return Profile.create({
+          name,
+          address,
+          phone,
+          UserId: data.id
+        })
+      })
       .then(() => res.redirect('/login?success=Register+success!'))
       .catch(err => {
         if (err.name === 'SequelizeValidationError') {
@@ -97,14 +105,60 @@ class Controller {
       })
   }
 
-  static readStoreAdmin(req, res) {
+  // =================================================================
+
+  static readStore(req, res) {
+    const userId = req.session.userId
+    let data
     Coffee.findAll()
-      .then(data => res.render('storeAdmin', { data }))
-      .catch(err => {
-        console.log(err)
+    .then(coffee => {
+      data = coffee
+      return  Profile.findOne({
+        where : {UserId : userId},
+        include : [{
+          model : Order,
+          include :[{
+            model : Coffee,
+            order : ['name', 'ASC']
+          }],
+          order : ['id', 'ASC']
+        }]
+      })
+    })
+    .then(profile => {
+      res.render('store', {data, profile})
+    })
+    .catch(err => {
+      console.log(err)
         res.send(err)
     })
-    
+  }
+
+  static readStoreAdmin(req, res) {
+    const userId = req.session.userId
+    let data
+    Coffee.findAll()
+    .then(coffee => {
+      data = coffee
+      return  Profile.findOne({
+        where : {UserId : userId},
+        include : [{
+          model : Order,
+          include :[{
+            model : Coffee,
+            order : ['name', 'ASC']
+          }],
+          order : ['id', 'ASC']
+        }]
+      })
+    })
+    .then(profile => {
+      res.render('storeAdmin', {data, profile})
+    })
+    .catch(err => {
+      console.log(err)
+        res.send(err)
+    })
   }
 
   static addToCart(req, res){
@@ -172,33 +226,6 @@ class Controller {
     })
   }
 
-  static readStore(req, res) {
-    const {profid} = req.params
-    let data
-    Coffee.findAll()
-    .then(coffee => {
-      data = coffee
-      return  Profile.findOne({
-        where : {id : profid},
-        include : [{
-          model : Order,
-          include :[{
-            model : Coffee,
-            order : ['name', 'ASC']
-          }],
-          order : ['id', 'ASC']
-        }]
-      })
-    })
-    .then(profile => {
-      res.render('store', {data, profile})
-    })
-    .catch(err => {
-      console.log(err)
-        res.send(err)
-    })
-
-  }
 
   static addToCart(req, res){
     const {id, profid} = req.params
