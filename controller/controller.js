@@ -322,9 +322,20 @@ class Controller {
     res.redirect('/')
   }
 
-  static test(req, res) {
-    res.send('asmasukmausk')
+  static profileList(req, res){
+    const {search} = req.query
+    Profile.listAll(search)
+    .then(profiles => {
+      console.log(profiles);
+      res.render('profileList', {profiles})
+    })
+    .catch(err => {
+      console.log(err);
+      res.send(err)
+    })
   }
+
+
 }
 
 module.exports = Controller

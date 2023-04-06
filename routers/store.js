@@ -32,10 +32,12 @@ router.get('/logout', Controller.logout)
 
 router.get('/addCoffee', authentication, isAdmin, Controller.addCoffeeForm)
 router.post('/addCoffee', authentication, isAdmin, uploadSingle, Controller.postCoffeeForm)
+router.get('/profilelist', Controller.profileList)
 
 
 router.get('/:profid/addtocart/:coffeeId', authentication, Controller.addToCart)
 router.get('/:profid/decrease/:coffeeId', authentication, Controller.decOrder)
 router.get('/:profid/increase/:coffeeId', authentication, Controller.incOrder)
+
 
 module.exports = router
