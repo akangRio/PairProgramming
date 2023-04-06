@@ -24,5 +24,9 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Coffee',
   });
+
+  Coffee.beforeValidate(instance => {
+    instance.coffeeCup = false
+  })
   return Coffee;
 };

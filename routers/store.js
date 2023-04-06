@@ -2,6 +2,11 @@ const Controller = require('../controller/controller')
 
 const router = require('express').Router()
 
+const {uploadSingle} = require('../helpers/multer')
+
+const multer  = require('multer')
+const upload = multer({ dest: './public/' })
+
 const authentication = (req, res, next) => {
 	console.log(req.session, '<-- login authentication')
 	if (req.session.userId) {
@@ -24,9 +29,13 @@ const isNotAdmin = (req, res, next) => {
 router.get('/', authentication, isNotAdmin, Controller.readStore)
 router.get('/admin', authentication, isAdmin, Controller.readStoreAdmin)
 router.get('/logout', Controller.logout)
-// router.get('/:profid', Controller.readStore)
-router.get('/:profid/addtocart/:id', Controller.addToCart)
-router.get('/:profid/decrease/:id', Controller.decOrder)
-router.get('/:profid/increase/:id', Controller.incOrder)
+
+router.get('/addCoffee', authentication, isAdmin, Controller.addCoffeeForm)
+router.post('/addCoffee', authentication, isAdmin, uploadSingle, Controller.postCoffeeForm)
+
+
+router.get('/:profid/addtocart/:coffeeId', authentication, Controller.addToCart)
+router.get('/:profid/decrease/:coffeeId', authentication, Controller.decOrder)
+router.get('/:profid/increase/:coffeeId', authentication, Controller.incOrder)
 
 module.exports = router

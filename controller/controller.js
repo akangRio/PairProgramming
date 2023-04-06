@@ -107,33 +107,6 @@ class Controller {
 
   // =================================================================
 
-  static readStore(req, res) {
-    const userId = req.session.userId
-    let data
-    Coffee.findAll()
-    .then(coffee => {
-      data = coffee
-      return  Profile.findOne({
-        where : {UserId : userId},
-        include : [{
-          model : Order,
-          include :[{
-            model : Coffee,
-            order : ['name', 'ASC']
-          }],
-          order : ['id', 'ASC']
-        }]
-      })
-    })
-    .then(profile => {
-      res.render('store', {data, profile})
-    })
-    .catch(err => {
-      console.log(err)
-        res.send(err)
-    })
-  }
-
   static readStoreAdmin(req, res) {
     const userId = req.session.userId
     let data
@@ -161,13 +134,63 @@ class Controller {
     })
   }
 
+  static addCoffeeForm(req, res) {
+    const errors = req.query.errors
+    res.render('addCoffee', {errors})
+  }
+
+  static postCoffeeForm(req, res) {
+    const {name, price, category} = req.body
+    const image = `/images/${req.file.filename}`;
+    Coffee.create({
+      name,
+      image,
+      price,
+      category
+    })
+      .then(() => res.redirect('/store/admin'))
+      .catch(err => {
+        console.log(err)
+        res.send(err)
+      })
+  }
+
+  // ================ NOT ADMIN ================
+
+  static readStore(req, res) {
+    const userId = req.session.userId
+    let data
+    Coffee.findAll()
+    .then(coffee => {
+      data = coffee
+      return  Profile.findOne({
+        where : {UserId : userId},
+        include : [{
+          model : Order,
+          include :[{
+            model : Coffee,
+            order : ['name', 'ASC']
+          }],
+          order : ['id', 'ASC']
+        }]
+      })
+    })
+    .then(profile => {
+      res.render('store', {data, profile})
+    })
+    .catch(err => {
+      console.log(err)
+        res.send(err)
+    })
+  }
+
   static addToCart(req, res){
-    const {id, profid} = req.params
+    const {coffeeId, profid} = req.params
     let saveProfile
     let saveCoffee
 
     Coffee.findOne({
-      where:{id}
+      where:{id: coffeeId}
     })
     .then(coffee => {
       saveCoffee = coffee
@@ -178,36 +201,37 @@ class Controller {
     .then(profile => {
       saveProfile = profile
       return Order.findOne({where : {
-        CoffeeId : id,
+        CoffeeId : coffeeId,
         ProfileId : profid
       }})
     })
     .then(order => {
       if(order){
-        return Order.increment({quantity : 1}, {where : {CoffeeId : id}})
+        return Order.increment({quantity : 1}, {where : {CoffeeId : coffeeId}})
       } else {
         return Order.create({
           basePrice : saveCoffee.price,
           address : saveProfile.address,
           ProfileId : profid,
-          CoffeeId : id
+          CoffeeId : coffeeId
         })
       }
     })
     .then(result => {
-      res.redirect(`/store/${profid}`)
+      res.redirect(`/store`)
     })
     .catch(err => {
+      console.log(err);
       res.send(err)
     })
    
   }
 
   static decOrder(req, res){
-    const {id, profid} = req.params
-    Order.decrement({quantity : 1}, {where : {CoffeeId : id}})
+    const {coffeeId, profid} = req.params
+    Order.decrement({quantity : 1}, {where : {CoffeeId : coffeeId}})
     .then(order => {
-      res.redirect(`/store/${profid}`)
+      res.redirect(`/store`)
     })
     .catch(err => {
       res.send(err)
@@ -216,85 +240,90 @@ class Controller {
   }
 
   static incOrder(req, res){
-    const {id, profid} = req.params
-    Order.increment({quantity : 1}, {where : {CoffeeId : id}})
+    const {coffeeId, profid} = req.params
+    Order.increment({quantity : 1}, {where : {CoffeeId : coffeeId}})
     .then(order => {
-      res.redirect(`/store/${profid}`)
+      res.redirect(`/store`)
     })
     .catch(err => {
+      console.log(err);
       res.send(err)
     })
   }
 
 
-  static addToCart(req, res){
-    const {id, profid} = req.params
-    let saveProfile
-    let saveCoffee
+  // static addToCart(req, res){
+  //   const {id, profid} = req.params
+  //   let saveProfile
+  //   let saveCoffee
 
-    Coffee.findOne({
-      where:{id}
-    })
-    .then(coffee => {
-      saveCoffee = coffee
-      return Profile.findOne({
-        where :{id : profid}
-      })
-    })
-    .then(profile => {
-      saveProfile = profile
-      return Order.findOne({where : {
-        CoffeeId : id,
-        ProfileId : profid
-      }})
-    })
-    .then(order => {
-      if(order){
-        return Order.increment({quantity : 1}, {where : {CoffeeId : id}})
-      } else {
-        return Order.create({
-          basePrice : saveCoffee.price,
-          address : saveProfile.address,
-          ProfileId : profid,
-          CoffeeId : id
-        })
-      }
-    })
-    .then(result => {
-      res.redirect(`/store/${profid}`)
-    })
-    .catch(err => {
-      res.send(err)
-    })
+  //   Coffee.findOne({
+  //     where:{id}
+  //   })
+  //   .then(coffee => {
+  //     saveCoffee = coffee
+  //     return Profile.findOne({
+  //       where :{id : profid}
+  //     })
+  //   })
+  //   .then(profile => {
+  //     saveProfile = profile
+  //     return Order.findOne({where : {
+  //       CoffeeId : id,
+  //       ProfileId : profid
+  //     }})
+  //   })
+  //   .then(order => {
+  //     if(order){
+  //       return Order.increment({quantity : 1}, {where : {CoffeeId : id}})
+  //     } else {
+  //       return Order.create({
+  //         basePrice : saveCoffee.price,
+  //         address : saveProfile.address,
+  //         ProfileId : profid,
+  //         CoffeeId : id
+  //       })
+  //     }
+  //   })
+  //   .then(result => {
+  //     res.redirect(`/store/${profid}`)
+  //   })
+  //   .catch(err => {
+  //     res.send(err)
+  //   })
    
-  }
+  // }
 
-  static decOrder(req, res){
-    const {id, profid} = req.params
-    Order.decrement({quantity : 1}, {where : {CoffeeId : id}})
-    .then(order => {
-      res.redirect(`/store/${profid}`)
-    })
-    .catch(err => {
-      res.send(err)
-    })
+  // static decOrder(req, res){
+  //   const {id, profid} = req.params
+  //   Order.decrement({quantity : 1}, {where : {CoffeeId : id}})
+  //   .then(order => {
+  //     res.redirect(`/store/${profid}`)
+  //   })
+  //   .catch(err => {
+  //     res.send(err)
+  //   })
 
-  }
+  // }
 
-  static incOrder(req, res){
-    const {id, profid} = req.params
-    Order.increment({quantity : 1}, {where : {CoffeeId : id}})
-    .then(order => {
-      res.redirect(`/store/${profid}`)
-    })
-    .catch(err => {
-      res.send(err)
-    })
-  }
+  // static incOrder(req, res){
+  //   const {id, profid} = req.params
+  //   Order.increment({quantity : 1}, {where : {CoffeeId : id}})
+  //   .then(order => {
+  //     res.redirect(`/store/${profid}`)
+  //   })
+  //   .catch(err => {
+  //     res.send(err)
+  //   })
+  // }
 
   static logout(req, res) {
     req.session.userId = null
     res.redirect('/')
+  }
+
+  static test(req, res) {
+    res.send('asmasukmausk')
   }
 }
 
