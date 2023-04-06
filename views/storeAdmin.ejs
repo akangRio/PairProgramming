@@ -12,12 +12,12 @@
 
 <body>
   <%- include('navbar.ejs') %>
-  <a href="/store/logout">LOGOUT</a>
     <div class="container">
-      <h1>Coffee Shop ADMIN</h1>
-
+      <h1>Admin Page</h1>
+      <a class="btn btn-primary float-end" href="/store/logout">LOGOUT</a>
       <div>
         <button class="btn btn-primary" onclick="location.href='/store/addCoffee'">Add Coffee</button>
+        <button class="btn btn-primary" onclick="location.href='/store/profilelist'">User Profiles</button>
       </div>
 
       <table class="table">
@@ -47,7 +47,7 @@
               <td>
                 <%= el.category %>
               </td>
-              <td><button><a href="/store/<%= profile.id %>/addtocart/<%= el.id %>">Delete</a></button></td>
+              <td><a class="btn btn-danger" href="/store/<%= profile.id %>/delete/<%= el.id %>">Delete</a></td>
             </tr>
             <% }) %>
         </tbody>

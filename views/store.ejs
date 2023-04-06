@@ -12,8 +12,8 @@
 
 <body>
   <%- include('navbar.ejs') %>
-  <a href="/store/logout">LOGOUT</a>
-    <div class="container">
+  <div class="container my-4">
+      <a class="btn btn-primary float-end" href="/store/logout">LOGOUT</a>
       <h1>Coffee Shop</h1>
 
       <table class="table">
@@ -21,7 +21,6 @@
           <tr>
             <th>Image</th>
             <th>Name</th>
-            <th>Type</th>
             <th>Price</th>
             <th>Category</th>
             <th>Add to Cart</th>
@@ -30,12 +29,9 @@
         <tbody>
           <% data.forEach(el=> { %>
             <tr>
-              <td><img width="200" height="100" src="<%= el.image %>"></td>
+              <td><img class="img-thumbnail" width="200" height="100" src="<%= el.image %>"></td>
               <td>
                 <%= el.name %>
-              </td>
-              <td>
-                <%= el.coffeeCup %>
               </td>
               <td>
                 <%= el.price %>
@@ -43,11 +39,13 @@
               <td>
                 <%= el.category %>
               </td>
-              <td><button><a href="/store/<%= profile.id %>/addtocart/<%= el.id %>">Add to Cart</a></button></td>
+              <td><a class="btn btn-secondary" href="/store/<%= profile.id %>/addtocart/<%= el.id %>">Add to Cart</a></td>
             </tr>
             <% }) %>
         </tbody>
       </table>
+
+      <hr>
      <% if(profile.Orders){%> 
       <h2>Shopping Cart</h2> 
      <% } %>
@@ -70,9 +68,9 @@
             <td><%= order.Coffee.name %></td>
             <td><%= order.basePrice %></td>
             <td>
-              <a href="/store/<%= profile.id %>/increase/<%= order.CoffeeId %>">+</a>
+              <a class="btn btn-success" href="/store/<%= profile.id %>/increase/<%= order.CoffeeId %>">+</a>
               <%= order.quantity %>
-              <a href="/store/<%= profile.id %>/decrease/<%= order.CoffeeId %>">-</a>
+              <a class="btn btn-warning" href="/store/<%= profile.id %>/decrease/<%= order.CoffeeId %>">-</a>
             </td>
             <td><%= order.totalPrice %></td>
           </tr>
