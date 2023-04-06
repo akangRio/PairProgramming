@@ -335,6 +335,20 @@ class Controller {
     })
   }
 
+  static delete(req, res) {
+    const id = req.params.coffeeId
+
+    Coffee.destroy({
+      where: {
+        id: id
+      }
+    })
+      .then(() => res.redirect('/store/admin'))
+      .catch(err => {
+        console.log(err);
+        res.send(err)
+      })
+  }
 
 }
 

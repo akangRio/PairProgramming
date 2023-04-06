@@ -34,7 +34,7 @@ router.get('/addCoffee', authentication, isAdmin, Controller.addCoffeeForm)
 router.post('/addCoffee', authentication, isAdmin, uploadSingle, Controller.postCoffeeForm)
 router.get('/profilelist', Controller.profileList)
 
-
+// router.get('/admin/delete/:coffeeId', authentication, isAdmin, Controller.delete)
 router.get('/:profid/addtocart/:coffeeId', authentication, Controller.addToCart)
 router.get('/:profid/decrease/:coffeeId', authentication, Controller.decOrder)
 router.get('/:profid/increase/:coffeeId', authentication, Controller.incOrder)

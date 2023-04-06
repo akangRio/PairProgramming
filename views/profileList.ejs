@@ -21,12 +21,17 @@
       <a class="btn btn-primary float-end mb-3" href="/store/logout">LOGOUT</a>
 
       <form action="/store/profilelist" method="get">
-        <div class="input-group my-3">
-          <span class="input-group-text" id="inputGroup-sizing-default">Seach Profile</span>
-          <input type="text" class="form-control" aria-label="Sizing example input"
-            aria-describedby="inputGroup-sizing-default" name="search">
-            <button type="submit">Submit</button>
+        <div class="mb-3">
+          <div class="row gx-3">
+            <div class="col-8">
+              <input type="text" class="form-control" aria-label="Sizing example input"
+                aria-describedby="inputGroup-sizing-default" name="search">
+            </div>
+            <div class="col-3">
+              <button class="btn btn-secondary" type="submit">Search</button>
+            </div>
           </div>
+        </div>
       </form>
 
       <table class="table">
